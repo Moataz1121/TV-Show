@@ -33,6 +33,10 @@
             object-fit: cover;
             border-radius: 50%;
         }
+        .card-img-top-cover {
+            height: 200px;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -47,11 +51,31 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
+                        <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                            <i class="bi bi-house-door me-1"></i>Home
+                        </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('shows.*') ? 'active' : '' }}" href="{{ route('shows.index') }}">
+                            <i class="bi bi-film me-1"></i>TV Shows
+                        </a>
+                    </li>
+
+                    <!-- Placeholder for 5 Random TV Shows -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-shuffle me-1"></i>Random Shows
+                        </a>
+                        <ul class="dropdown-menu shadow">
+                            <li><span class="dropdown-item text-muted small">Feature coming soon...</span></li>
+                        </ul>
+                    </li>
+
                     @auth
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>
+                        <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
                     </li>
                     @endauth
                 </ul>

@@ -14,7 +14,7 @@
 <div class="card shadow-sm border-0 rounded-3 mb-5 overflow-hidden">
     <div class="card-body p-4 p-md-5 bg-dark text-white">
         <div class="row align-items-center">
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <span class="badge text-bg-danger text-uppercase mb-2 px-3 py-2">TV Series</span>
                 <h1 class="display-5 fw-bold text-white mb-3">{{ $show->title }}</h1>
                 <p class="lead text-light mb-4">{{ $show->description }}</p>
@@ -28,6 +28,32 @@
                         {{ $show->episodes->count() }} Episodes
                     </span>
                 </div>
+            </div>
+
+            <!-- Follow / Unfollow Button Section -->
+            <div class="col-md-4 text-md-end mt-4 mt-md-0">
+                @auth
+                    @if($isFollowing)
+                        <form method="POST" action="{{ route('shows.unfollow', $show) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-lg fw-semibold px-4 shadow">
+                                <i class="bi bi-heart-fill me-2"></i>Unfollow Show
+                            </button>
+                        </form>
+                    @else
+                        <form method="POST" action="{{ route('shows.follow', $show) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-light btn-lg fw-semibold px-4 shadow">
+                                <i class="bi bi-heart me-2"></i>Follow Show
+                            </button>
+                        </form>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-light btn-lg fw-semibold px-4 shadow">
+                        <i class="bi bi-heart me-2"></i>Login to Follow
+                    </a>
+                @endauth
             </div>
         </div>
     </div>

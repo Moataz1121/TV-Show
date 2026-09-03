@@ -22,7 +22,8 @@ class TvShowController extends Controller
     public function show(TvShow $tvShow): View
     {
         $show = $this->tvShowService->getShowWithEpisodes($tvShow->id) ?? $tvShow;
+        $isFollowing = $this->tvShowService->isUserFollowing(auth()->user(), $show);
 
-        return view('shows.show', compact('show'));
+        return view('shows.show', compact('show', 'isFollowing'));
     }
 }

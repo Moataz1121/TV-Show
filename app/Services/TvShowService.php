@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\TvShow;
+use App\Models\User;
 use App\Repositories\Contracts\TvShowRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -20,5 +21,24 @@ class TvShowService
     public function getShowWithEpisodes(int $id): ?TvShow
     {
         return $this->tvShowRepository->findByIdWithEpisodes($id);
+    }
+
+    public function followShow(User $user, TvShow $tvShow): void
+    {
+        $this->tvShowRepository->follow($user, $tvShow);
+    }
+
+    public function unfollowShow(User $user, TvShow $tvShow): void
+    {
+        $this->tvShowRepository->unfollow($user, $tvShow);
+    }
+
+    public function isUserFollowing(?User $user, TvShow $tvShow): bool
+    {
+        if (! $user) {
+            return false;
+        }
+
+        return $this->tvShowRepository->isFollowedBy($tvShow, $user);
     }
 }

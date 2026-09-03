@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\EpisodeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TvShowController;
+use App\Http\Controllers\TvShowFollowController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -25,6 +26,10 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+
+    // Follow / Unfollow TV Shows
+    Route::post('/shows/{tvShow}/follow', [TvShowFollowController::class, 'store'])->name('shows.follow');
+    Route::delete('/shows/{tvShow}/unfollow', [TvShowFollowController::class, 'destroy'])->name('shows.unfollow');
 
     // Watching episodes requires authentication
     Route::get('/episodes/{episode}', [EpisodeController::class, 'show'])->name('episodes.show');

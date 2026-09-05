@@ -48,4 +48,9 @@ class TvShowRepository implements TvShowRepositoryInterface
             })
             ->get();
     }
+
+    public function getRandom(int $limit = 5): Collection
+    {
+        return TvShow::inRandomOrder()->take($limit)->get();
+    }
 }

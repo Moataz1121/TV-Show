@@ -21,4 +21,14 @@ class EpisodeRepository implements EpisodeRepositoryInterface
     {
         return Episode::with('tvShow')->find($id);
     }
+
+    public function search(string $term): Collection
+    {
+        return Episode::with('tvShow')
+            ->where(function ($query) use ($term) {
+                $query->where('title', 'LIKE', "%{$term}%")
+                      ->orWhere('description', 'LIKE', "%{$term}%");
+            })
+            ->get();
+    }
 }

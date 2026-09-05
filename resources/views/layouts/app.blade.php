@@ -79,6 +79,19 @@
                     </li>
                     @endauth
                 </ul>
+
+                @auth
+                <!-- Search Bar in Navbar for Authenticated Users -->
+                <form class="d-flex me-lg-3 my-2 my-lg-0" action="{{ route('search') }}" method="GET">
+                    <div class="input-group input-group-sm">
+                        <input class="form-control bg-dark text-white border-secondary" type="search" name="q" value="{{ request('q') }}" placeholder="Search shows & episodes..." aria-label="Search" required>
+                        <button class="btn btn-outline-danger" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+                @endauth
+
                 <ul class="navbar-nav ms-auto align-items-center">
                     @guest
                         <li class="nav-item">

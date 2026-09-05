@@ -5,6 +5,7 @@ namespace App\Repositories\Contracts;
 use App\Models\TvShow;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 interface TvShowRepositoryInterface
 {
@@ -17,4 +18,6 @@ interface TvShowRepositoryInterface
     public function unfollow(User $user, TvShow $tvShow): void;
 
     public function isFollowedBy(TvShow $tvShow, User $user): bool;
+
+    public function search(string $term): Collection;
 }

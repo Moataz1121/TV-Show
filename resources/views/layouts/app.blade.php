@@ -117,6 +117,14 @@
                                 <span class="badge text-bg-secondary text-uppercase ms-1" style="font-size: 0.65rem;">{{ Auth::user()->role }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow">
+                                @if(Auth::user()->isAdmin())
+                                    <li>
+                                        <a class="dropdown-item text-danger fw-bold" href="{{ route('admin.dashboard') }}">
+                                            <i class="bi bi-shield-lock me-2"></i>Admin Area
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                @endif
                                 <li><a class="dropdown-item" href="{{ route('dashboard') }}"><i class="bi bi-person me-2"></i>Profile & Dashboard</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>

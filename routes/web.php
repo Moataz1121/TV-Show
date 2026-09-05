@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminTvShowController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\EpisodeController;
@@ -8,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TvShowController;
 use App\Http\Controllers\TvShowFollowController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
@@ -24,7 +28,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
 });
 
-// Authenticated Routes
+// Authenticated User Routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
@@ -40,3 +44,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/episodes/{episode}', [EpisodeController::class, 'show'])->name('episodes.show');
     Route::post('/episodes/{episode}/reaction', [EpisodeReactionController::class, 'store'])->name('episodes.react');
 });
+
+// Protected Admin Area Routes
+Route::middleware(['auth', AdminMiddleware::class])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        // Admin Users Management (Read-Only)
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+
+        // Admin TV Shows CRUD (List, Create, View, Edit)
+        Route::resource('tv-shows', AdminTvShowController::class)->except(['destroy']);
+    });

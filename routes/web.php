@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\EpisodeController;
+use App\Http\Controllers\EpisodeReactionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TvShowController;
 use App\Http\Controllers\TvShowFollowController;
@@ -31,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/shows/{tvShow}/follow', [TvShowFollowController::class, 'store'])->name('shows.follow');
     Route::delete('/shows/{tvShow}/unfollow', [TvShowFollowController::class, 'destroy'])->name('shows.unfollow');
 
-    // Watching episodes requires authentication
+    // Watching episodes & reacting requires authentication
     Route::get('/episodes/{episode}', [EpisodeController::class, 'show'])->name('episodes.show');
+    Route::post('/episodes/{episode}/reaction', [EpisodeReactionController::class, 'store'])->name('episodes.react');
 });

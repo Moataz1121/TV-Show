@@ -44,6 +44,25 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm bg-light">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-danger text-white rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                        <i class="bi bi-film fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-0">TV Shows CRUD</h5>
+                                        <small class="text-muted">List, Create, View, and Edit TV series</small>
+                                    </div>
+                                </div>
+                                <a href="{{ route('admin.tv-shows.index') }}" class="btn btn-danger w-100 fw-semibold">
+                                    Manage TV Shows &rarr;
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

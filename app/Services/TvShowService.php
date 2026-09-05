@@ -47,4 +47,14 @@ class TvShowService
     {
         return $this->tvShowRepository->getRandom($limit);
     }
+
+    public function createShow(array $data): TvShow
+    {
+        return $this->tvShowRepository->create($data);
+    }
+
+    public function updateShow(TvShow $tvShow, array $data): TvShow
+    {
+        return $this->tvShowRepository->update($tvShow, $data);
+    }
 }

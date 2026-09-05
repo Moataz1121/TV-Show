@@ -22,4 +22,8 @@ interface TvShowRepositoryInterface
     public function search(string $term): Collection;
 
     public function getRandom(int $limit = 5): Collection;
+
+    public function create(array $data): TvShow;
+
+    public function update(TvShow $tvShow, array $data): TvShow;
 }

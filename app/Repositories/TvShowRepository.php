@@ -53,4 +53,16 @@ class TvShowRepository implements TvShowRepositoryInterface
     {
         return TvShow::inRandomOrder()->take($limit)->get();
     }
+
+    public function create(array $data): TvShow
+    {
+        return TvShow::create($data);
+    }
+
+    public function update(TvShow $tvShow, array $data): TvShow
+    {
+        $tvShow->update($data);
+
+        return $tvShow->fresh();
+    }
 }

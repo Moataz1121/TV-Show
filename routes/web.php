@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminTvShowController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -54,4 +55,7 @@ Route::middleware(['auth', AdminMiddleware::class])
         // Admin Users Management (Read-Only)
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+
+        // Admin TV Shows CRUD (List, Create, View, Edit)
+        Route::resource('tv-shows', AdminTvShowController::class)->except(['destroy']);
     });

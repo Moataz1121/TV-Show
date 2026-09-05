@@ -6,6 +6,7 @@ use App\Models\TvShow;
 use App\Models\User;
 use App\Repositories\Contracts\TvShowRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class TvShowService
 {
@@ -40,5 +41,10 @@ class TvShowService
         }
 
         return $this->tvShowRepository->isFollowedBy($tvShow, $user);
+    }
+
+    public function getRandomShows(int $limit = 5): Collection
+    {
+        return $this->tvShowRepository->getRandom($limit);
     }
 }

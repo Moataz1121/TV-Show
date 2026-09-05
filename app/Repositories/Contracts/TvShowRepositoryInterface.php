@@ -20,4 +20,6 @@ interface TvShowRepositoryInterface
     public function isFollowedBy(TvShow $tvShow, User $user): bool;
 
     public function search(string $term): Collection;
+
+    public function getRandom(int $limit = 5): Collection;
 }

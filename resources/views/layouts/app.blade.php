@@ -61,13 +61,22 @@
                         </a>
                     </li>
 
-                    <!-- Placeholder for 5 Random TV Shows -->
+                    <!-- 5 Random TV Shows Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-shuffle me-1"></i>Random Shows
                         </a>
                         <ul class="dropdown-menu shadow">
-                            <li><span class="dropdown-item text-muted small">Feature coming soon...</span></li>
+                            @forelse($randomTvShows ?? [] as $randomShow)
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" href="{{ route('shows.show', $randomShow) }}">
+                                        <i class="bi bi-film me-2 text-danger"></i>
+                                        <span>{{ $randomShow->title }}</span>
+                                    </a>
+                                </li>
+                            @empty
+                                <li><span class="dropdown-item text-muted small">No shows available</span></li>
+                            @endforelse
                         </ul>
                     </li>
 

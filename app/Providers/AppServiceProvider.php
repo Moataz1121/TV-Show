@@ -10,6 +10,8 @@ use App\Repositories\EpisodeReactionRepository;
 use App\Repositories\EpisodeRepository;
 use App\Repositories\TvShowRepository;
 use App\Repositories\UserRepository;
+use App\Services\TvShowService;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +32,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer('layouts.app', function ($view) {
+            $tvShowService = $this->app->make(TvShowService::class);
+            $view->with('randomTvShows', $tvShowService->getRandomShows(5));
+        });
     }
 }

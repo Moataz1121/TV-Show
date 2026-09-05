@@ -6,6 +6,7 @@ use App\Models\TvShow;
 use App\Models\User;
 use App\Repositories\Contracts\TvShowRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class TvShowRepository implements TvShowRepositoryInterface
 {
@@ -36,5 +37,15 @@ class TvShowRepository implements TvShowRepositoryInterface
     public function isFollowedBy(TvShow $tvShow, User $user): bool
     {
         return $user->tvShows()->where('tv_show_id', $tvShow->id)->exists();
+    }
+
+    public function search(string $term): Collection
+    {
+        return TvShow::withCount('episodes')
+            ->where(function ($query) use ($term) {
+                $query->where('title', 'LIKE', "%{$term}%")
+                      ->orWhere('description', 'LIKE', "%{$term}%");
+            })
+            ->get();
     }
 }

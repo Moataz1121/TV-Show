@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\EpisodeReactionRepositoryInterface;
 use App\Repositories\Contracts\EpisodeRepositoryInterface;
 use App\Repositories\Contracts\TvShowRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\EpisodeReactionRepository;
 use App\Repositories\EpisodeRepository;
 use App\Repositories\TvShowRepository;
 use App\Repositories\UserRepository;
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(TvShowRepositoryInterface::class, TvShowRepository::class);
         $this->app->bind(EpisodeRepositoryInterface::class, EpisodeRepository::class);
+        $this->app->bind(EpisodeReactionRepositoryInterface::class, EpisodeReactionRepository::class);
     }
 
     /**

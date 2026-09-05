@@ -14,6 +14,11 @@ class TvShowService
         protected TvShowRepositoryInterface $tvShowRepository
     ) {}
 
+    public function getAllShows(): Collection
+    {
+        return $this->tvShowRepository->getAll();
+    }
+
     public function getPaginatedShows(int $perPage = 12): LengthAwarePaginator
     {
         return $this->tvShowRepository->getAllPaginated($perPage);

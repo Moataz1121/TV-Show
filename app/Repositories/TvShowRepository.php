@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TvShowRepository implements TvShowRepositoryInterface
 {
+    public function getAll(): Collection
+    {
+        return TvShow::orderBy('title', 'asc')->get();
+    }
+
     public function getAllPaginated(int $perPage = 12): LengthAwarePaginator
     {
         return TvShow::withCount('episodes')

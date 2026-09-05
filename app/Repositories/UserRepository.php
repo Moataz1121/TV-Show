@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 
 class UserRepository implements UserRepositoryInterface
@@ -32,5 +33,19 @@ class UserRepository implements UserRepositoryInterface
     {
         $user->addMedia($file)
             ->toMediaCollection('avatar');
+    }
+
+    public function getPaginatedUsers(int $perPage = 10): LengthAwarePaginator
+    {
+        return User::withCount(['tvShows', 'episodeReactions'])
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+    }
+
+    public function getUserWithDetails(int $id): ?User
+    {
+        return User::with(['tvShows', 'episodeReactions'])
+            ->withCount(['tvShows', 'episodeReactions'])
+            ->find($id);
     }
 }

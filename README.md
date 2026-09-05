@@ -1,58 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SHOW.TV - Streaming & Management Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A web application built with **Laravel**, **Bootstrap 5**, **jQuery**, and **Spatie Translatable / Media Library** for managing and streaming TV shows and episodes.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Authentication & User Profiles**: User registration with avatar upload via Spatie Media Library, login, and logout.
+- **TV Shows**: Browse paginated TV shows list, view show details, view related episodes, and follow/unfollow shows.
+- **Episodes**: View episode details, duration, airing times, thumbnail, and stream video content (authentication required).
+- **Interactions**: Like / Dislike reactions on episodes with toggle/removal support.
+- **Dynamic Navigation**: Navbar featuring 5 random TV shows on each page request and quick search bar.
+- **Search**: Search across TV Shows and Episodes by title and description, supporting Spatie Translatable JSON fields in English & Arabic.
+- **Admin Area (Role Protection)**:
+  - Admin Dashboard accessible strictly to users with `role = 'admin'`.
+  - **Users Management**: Read-only listing and detailed profile view of registered users.
+  - **TV Shows CRUD**: List, Create, View, and Edit TV series with bilingual titles and descriptions.
+  - **Episodes CRUD**: List, Create, View, and Edit episodes with TV show association, thumbnail/video upload or URL management, and reaction stats.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Architecture
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The project strictly adheres to the **Controller → Service → Repository → Model** architectural pattern:
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Controllers**: Thin controllers handling HTTP requests and view rendering.
+- **Services**: Business logic execution and data orchestration (e.g. file upload handling, auth, reactions, search).
+- **Repositories**: Database access and Eloquent query encapsulation with contract interfaces.
+- **Models**: Eloquent models with Spatie Translatable and Spatie Media Library traits.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## Setup & Installation
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 1. Requirements
+- PHP 8.2+
+- Composer
+- SQLite / MySQL / PostgreSQL
+
+### 2. Installation Steps
+
+1. Clone the repository and install Composer dependencies:
+   ```bash
+   composer install
+   ```
+
+2. Copy environment file and setup database:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+3. Configure database in `.env` (SQLite is enabled by default in `.env.example`).
+
+4. Run migrations and seed default Admin user:
+   ```bash
+   php artisan migrate --seed
+   ```
+
+   *This executes the `AdminUserSeeder`, creating default admin credentials:*
+   - **Email**: `admin@show.tv`
+   - **Password**: `password`
+   - **Role**: `admin`
+
+5. Create storage symbolic link:
+   ```bash
+   php artisan storage:link
+   ```
+
+6. Start local development server:
+   ```bash
+   php artisan serve
+   ```
+
+---
+
+## Running Tests
+
+Execute the full automated test suite covering authentication, admin authorization, user features, search, and TV Show / Episode CRUD:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan test
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Tech Stack
+- **Backend Framework**: Laravel
+- **Frontend Stack**: Laravel Blade, Bootstrap 5, Bootstrap Icons, jQuery
+- **Media Management**: Spatie Media Library
+- **Localization**: Spatie Translatable (JSON column translation without separate tables)

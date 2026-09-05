@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface TvShowRepositoryInterface
 {
+    public function getAll(): Collection;
+
     public function getAllPaginated(int $perPage = 12): LengthAwarePaginator;
 
     public function findByIdWithEpisodes(int $id): ?TvShow;

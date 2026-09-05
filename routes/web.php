@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminEpisodeController;
 use App\Http\Controllers\Admin\AdminTvShowController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -58,4 +59,7 @@ Route::middleware(['auth', AdminMiddleware::class])
 
         // Admin TV Shows CRUD (List, Create, View, Edit)
         Route::resource('tv-shows', AdminTvShowController::class)->except(['destroy']);
+
+        // Admin Episodes CRUD (List, Create, View, Edit)
+        Route::resource('episodes', AdminEpisodeController::class)->except(['destroy']);
     });

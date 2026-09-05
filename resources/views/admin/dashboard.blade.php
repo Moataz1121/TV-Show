@@ -26,7 +26,7 @@
                 <hr>
 
                 <div class="row g-4 mt-1">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm bg-light">
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center mb-3">
@@ -39,13 +39,13 @@
                                     </div>
                                 </div>
                                 <a href="{{ route('admin.users.index') }}" class="btn btn-dark w-100 fw-semibold">
-                                    View Registered Users &rarr;
+                                    View Users &rarr;
                                 </a>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm bg-light">
                             <div class="card-body p-4">
                                 <div class="d-flex align-items-center mb-3">
@@ -59,6 +59,25 @@
                                 </div>
                                 <a href="{{ route('admin.tv-shows.index') }}" class="btn btn-danger w-100 fw-semibold">
                                     Manage TV Shows &rarr;
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm bg-light">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="bg-danger text-white rounded-circle p-3 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                                        <i class="bi bi-collection-play fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-0">Episodes CRUD</h5>
+                                        <small class="text-muted">List, Create, View, and Edit episodes</small>
+                                    </div>
+                                </div>
+                                <a href="{{ route('admin.episodes.index') }}" class="btn btn-dark w-100 fw-semibold">
+                                    Manage Episodes &rarr;
                                 </a>
                             </div>
                         </div>

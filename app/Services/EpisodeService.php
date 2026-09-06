@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Episode;
+use App\Models\User;
 use App\Repositories\Contracts\EpisodeRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,6 +19,11 @@ class EpisodeService
     public function getLatestEpisodes(int $limit = 6): Collection
     {
         return $this->episodeRepository->getLatest($limit);
+    }
+
+    public function getEpisodesFromFollowedShows(User $user, int $limit = 6): Collection
+    {
+        return $this->episodeRepository->getEpisodesFromFollowedShows($user, $limit);
     }
 
     public function getEpisodeWithTvShow(int $id): ?Episode

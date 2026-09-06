@@ -37,11 +37,9 @@ class LoginController extends Controller
             $request
         );
 
-        Log::info('[LoginController] Login successful, redirecting user.', [
-            'user_id' => auth()->id(),
-            'email' => auth()->user()?->email,
-            'role' => auth()->user()?->role,
-        ]);
+        if (auth()->user()?->isAdmin()) {
+            return redirect()->intended(route('admin.dashboard'))->with('success', 'Logged in as Admin! Welcome to SHOW.TV Admin Panel.');
+        }
 
         return redirect()->intended(route('home'))->with('success', 'Logged in successfully!');
     }

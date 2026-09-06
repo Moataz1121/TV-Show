@@ -3,12 +3,15 @@
 namespace App\Repositories\Contracts;
 
 use App\Models\Episode;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 interface EpisodeRepositoryInterface
 {
     public function getLatest(int $limit = 6): Collection;
+
+    public function getEpisodesFromFollowedShows(User $user, int $limit = 6): Collection;
 
     public function findByIdWithTvShow(int $id): ?Episode;
 

@@ -67,4 +67,23 @@ class Episode extends Model implements HasMedia
     {
         return $this->hasMany(EpisodeReaction::class);
     }
+
+    /**
+     * Check if the episode has already aired.
+     */
+    public function isAired(): bool
+    {
+        return is_null($this->airing_time) || $this->airing_time->isPast();
+    }
+
+    /**
+     * Scope a query to only include aired episodes.
+     */
+    public function scopeAired($query)
+    {
+        return $query->where(function ($q) {
+            $q->whereNull('airing_time')
+              ->orWhere('airing_time', '<=', now());
+        });
+    }
 }

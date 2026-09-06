@@ -94,4 +94,55 @@ class TvShowFollowTest extends TestCase
             'tv_show_id' => $show->id,
         ]);
     }
+
+    public function test_ajax_follow_and_unfollow_return_json_responses(): void
+    {
+        $user = User::factory()->create();
+        $show = TvShow::create([
+            'title' => ['en' => 'Breaking Bad', 'ar' => 'بريكينج باد'],
+            'description' => ['en' => 'Chemistry teacher show', 'ar' => 'مسلسل كيمياء'],
+        ]);
+
+        // AJAX Follow
+        $followResponse = $this->actingAs($user)->postJson(route('shows.follow', $show));
+
+        $followResponse->assertStatus(200);
+        $followResponse->assertJson([
+            'success' => true,
+            'isFollowing' => true,
+        ]);
+        $this->assertDatabaseHas('show_user', ['user_id' => $user->id, 'tv_show_id' => $show->id]);
+
+        // AJAX Unfollow
+        $unfollowResponse = $this->actingAs($user)->deleteJson(route('shows.unfollow', $show));
+
+        $unfollowResponse->assertStatus(200);
+        $unfollowResponse->assertJson([
+            'success' => true,
+            'isFollowing' => false,
+        ]);
+        $this->assertDatabaseMissing('show_user', ['user_id' => $user->id, 'tv_show_id' => $show->id]);
+    }
+
+    public function test_home_page_displays_episodes_from_followed_shows_for_authenticated_users(): void
+    {
+        $user = User::factory()->create();
+        $show = TvShow::create([
+            'title' => ['en' => 'Better Call Saul', 'ar' => 'من الأفضل الاتصال بسول'],
+            'description' => ['en' => 'Lawyer drama', 'ar' => 'دراما قانونية'],
+        ]);
+
+        $episode = $show->episodes()->create([
+            'title' => ['en' => 'Uno Episode'],
+            'description' => ['en' => 'First episode of BCS'],
+        ]);
+
+        $user->tvShows()->attach($show->id);
+
+        $response = $this->actingAs($user)->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertSee('From Your Followed TV Shows');
+        $response->assertSee('Uno Episode');
+    }
 }

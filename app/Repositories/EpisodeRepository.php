@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Episode;
+use App\Models\User;
 use App\Repositories\Contracts\EpisodeRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,6 +13,24 @@ class EpisodeRepository implements EpisodeRepositoryInterface
     public function getLatest(int $limit = 6): Collection
     {
         return Episode::with('tvShow')
+            ->aired()
+            ->orderBy('airing_time', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take($limit)
+            ->get();
+    }
+
+    public function getEpisodesFromFollowedShows(User $user, int $limit = 6): Collection
+    {
+        $followedShowIds = $user->tvShows()->pluck('tv_shows.id');
+
+        if ($followedShowIds->isEmpty()) {
+            return new Collection();
+        }
+
+        return Episode::with('tvShow')
+            ->aired()
+            ->whereIn('tv_show_id', $followedShowIds)
             ->orderBy('airing_time', 'desc')
             ->orderBy('created_at', 'desc')
             ->take($limit)
@@ -26,6 +45,7 @@ class EpisodeRepository implements EpisodeRepositoryInterface
     public function search(string $term): Collection
     {
         return Episode::with('tvShow')
+            ->aired()
             ->where(function ($query) use ($term) {
                 $query->where('title', 'LIKE', "%{$term}%")
                       ->orWhere('description', 'LIKE', "%{$term}%");

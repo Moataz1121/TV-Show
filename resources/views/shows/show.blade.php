@@ -30,25 +30,25 @@
                 </div>
             </div>
 
-            <!-- Follow / Unfollow Button Section -->
-            <div class="col-md-4 text-md-end mt-4 mt-md-0">
+            <!-- Follow / Unfollow Button Section (jQuery AJAX Handled) -->
+            <div class="col-md-4 text-md-end mt-4 mt-md-0" id="follow-container">
                 @auth
-                    @if($isFollowing)
-                        <form method="POST" action="{{ route('shows.unfollow', $show) }}">
-                            @csrf
+                    <form method="POST"
+                          action="{{ $isFollowing ? route('shows.unfollow', $show) : route('shows.follow', $show) }}"
+                          id="follow-form"
+                          data-follow-url="{{ route('shows.follow', $show) }}"
+                          data-unfollow-url="{{ route('shows.unfollow', $show) }}">
+                        @csrf
+                        @if($isFollowing)
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-lg fw-semibold px-4 shadow">
-                                <i class="bi bi-heart-fill me-2"></i>Unfollow Show
-                            </button>
-                        </form>
-                    @else
-                        <form method="POST" action="{{ route('shows.follow', $show) }}">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-light btn-lg fw-semibold px-4 shadow">
-                                <i class="bi bi-heart me-2"></i>Follow Show
-                            </button>
-                        </form>
-                    @endif
+                        @endif
+                        <button type="submit"
+                                id="follow-btn"
+                                class="btn {{ $isFollowing ? 'btn-danger' : 'btn-outline-light' }} btn-lg fw-semibold px-4 shadow">
+                            <i class="bi {{ $isFollowing ? 'bi-heart-fill' : 'bi-heart' }} me-2"></i>
+                            <span id="follow-btn-text">{{ $isFollowing ? 'Unfollow Show' : 'Follow Show' }}</span>
+                        </button>
+                    </form>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline-light btn-lg fw-semibold px-4 shadow">
                         <i class="bi bi-heart me-2"></i>Login to Follow
@@ -75,6 +75,11 @@
                         <img src="{{ $episode->thumbnail ?: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500&auto=format&fit=crop&q=60' }}"
                              alt="{{ $episode->title }}"
                              class="card-img-top card-img-top-cover">
+                        @if(!$episode->isAired())
+                            <span class="position-absolute top-0 start-0 bg-warning text-dark fw-bold px-2 py-1 m-2 rounded small shadow-sm">
+                                <i class="bi bi-calendar-event me-1"></i>Upcoming
+                            </span>
+                        @endif
                         <span class="position-absolute bottom-0 end-0 bg-dark text-white px-2 py-1 m-2 rounded small opacity-75">
                             <i class="bi bi-clock me-1"></i>{{ $episode->duration ? $episode->duration . ' mins' : 'N/A' }}
                         </span>
@@ -100,3 +105,69 @@
     </div>
 @endif
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#follow-container').on('submit', '#follow-form', function(e) {
+        e.preventDefault();
+
+        const form = $(this);
+        const actionUrl = form.attr('action');
+        const followUrl = form.data('follow-url');
+        const unfollowUrl = form.data('unfollow-url');
+        const methodInput = form.find('input[name="_method"]').val();
+        const httpMethod = methodInput ? methodInput : 'POST';
+        const csrfToken = form.find('input[name="_token"]').val();
+        const btn = $('#follow-btn');
+
+        btn.prop('disabled', true);
+
+        $.ajax({
+            url: actionUrl,
+            method: 'POST',
+            data: {
+                _token: csrfToken,
+                _method: httpMethod
+            },
+            dataType: 'json',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            },
+            success: function(response) {
+                if (response.success) {
+                    if (response.isFollowing) {
+                        // User is now following -> update form & button to Unfollow state
+                        form.attr('action', response.unfollowUrl);
+                        if (form.find('input[name="_method"]').length === 0) {
+                            form.append('<input type="hidden" name="_method" value="DELETE">');
+                        }
+                        btn.removeClass('btn-outline-light').addClass('btn-danger');
+                        btn.find('i').removeClass('bi-heart').addClass('bi-heart-fill');
+                        $('#follow-btn-text').text('Unfollow Show');
+                    } else {
+                        // User has unfollowed -> update form & button to Follow state
+                        form.attr('action', response.followUrl);
+                        form.find('input[name="_method"]').remove();
+                        btn.removeClass('btn-danger').addClass('btn-outline-light');
+                        btn.find('i').removeClass('bi-heart-fill').addClass('bi-heart');
+                        $('#follow-btn-text').text('Follow Show');
+                    }
+                }
+            },
+            error: function(xhr) {
+                if (xhr.status === 401) {
+                    window.location.href = "{{ route('login') }}";
+                } else {
+                    console.error('Follow error:', xhr);
+                }
+            },
+            complete: function() {
+                btn.prop('disabled', false);
+            }
+        });
+    });
+});
+</script>
+@endpush

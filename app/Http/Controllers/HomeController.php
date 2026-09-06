@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\EpisodeService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -14,8 +15,11 @@ class HomeController extends Controller
     public function index(): View
     {
         $latestEpisodes = $this->episodeService->getLatestEpisodes(6);
+        $followedEpisodes = auth()->check()
+            ? $this->episodeService->getEpisodesFromFollowedShows(auth()->user(), 6)
+            : new Collection();
 
-        return view('home', compact('latestEpisodes'));
+        return view('home', compact('latestEpisodes', 'followedEpisodes'));
     }
 
     public function dashboard(): View

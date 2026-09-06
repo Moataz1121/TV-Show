@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Admin - TV Show Details: ' . $show->title)
+@section('title', 'Admin - TV Show Details')
 
-@section('content')
+@section('admin_content')
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Admin Dashboard</a></li>

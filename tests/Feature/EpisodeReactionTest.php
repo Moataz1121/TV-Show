@@ -124,4 +124,39 @@ class EpisodeReactionTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('btn-primary'); // Active like button CSS class
     }
+
+    public function test_ajax_reaction_returns_json_response(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson(route('episodes.react', $this->episode), [
+            'type' => 'like',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'userReaction' => 'like',
+            'likesCount' => 1,
+            'dislikesCount' => 0,
+        ]);
+    }
+
+    public function test_user_cannot_react_to_upcoming_un_aired_episode(): void
+    {
+        $upcomingEpisode = $this->show->episodes()->create([
+            'title' => ['en' => 'Future Episode'],
+            'description' => ['en' => 'Future description'],
+            'airing_time' => now()->addDays(5),
+        ]);
+
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('episodes.react', $upcomingEpisode), [
+            'type' => 'like',
+        ]);
+
+        $response->assertSessionHas('error', 'Cannot react to an episode before its airing time.');
+        $this->assertDatabaseMissing('episode_reactions', ['episode_id' => $upcomingEpisode->id]);
+    }
 }
